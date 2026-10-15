@@ -1,0 +1,1369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101719">
+    <title>Forerunner Archive — Halo Universe Quiz</title>
+    <style>
+      :root {
+        color-scheme: dark light;
+        font-family: "Bahnschrift", "DIN Alternate", "Segoe UI", sans-serif;
+        font-size: 15px;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --page: #101719;
+        --page-glow: #293b3d;
+        --panel: #1a2427;
+        --panel-raised: #222e31;
+        --panel-soft: #2c393d;
+        --line: #4a5d60;
+        --line-strong: #83989a;
+        --text: #eaf2eb;
+        --muted: #a2b7b0;
+        --quiet: #6f8983;
+        --accent: #75d9ca;
+        --accent-strong: #a0e8d8;
+        --accent-ink: #09201e;
+        --blue: #a7dfea;
+        --signal: #e3c078;
+        --correct: #9ee2ac;
+        --correct-bg: #1b3827;
+        --wrong: #ff9b91;
+        --wrong-bg: #402422;
+        --shadow: 0 30px 90px rgb(0 0 0 / 35%);
+        --radius: 22px;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          color-scheme: light;
+          --page: #e4e8e5;
+          --page-glow: #c8d3d1;
+          --panel: #dfe5e2;
+          --panel-raised: #e8ece9;
+          --panel-soft: #cad5d2;
+          --line: #a7b7b4;
+          --line-strong: #7b9590;
+          --text: #1b2c2c;
+          --muted: #536b68;
+          --quiet: #738782;
+          --accent: #167e76;
+          --accent-strong: #0d5f5a;
+          --accent-ink: #f4f5eb;
+          --blue: #286b76;
+          --signal: #a56b22;
+          --correct: #245f36;
+          --correct-bg: #e1f2e3;
+          --wrong: #a2372d;
+          --wrong-bg: #f9e5e1;
+          --shadow: 0 30px 90px rgb(37 45 24 / 12%);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(ellipse at 50% 0%, var(--page-glow) 0, transparent 56%),
+          linear-gradient(145deg, color-mix(in srgb, var(--text) 5%, var(--page)), var(--page) 48%, color-mix(in srgb, var(--page) 84%, black));
+        font-size: 15px;
+      }
+
+      body::before {
+        position: fixed;
+        z-index: -1;
+        inset: 0;
+        background-image:
+          repeating-linear-gradient(92deg, transparent 0 3px, color-mix(in srgb, var(--text) 2%, transparent) 4px, transparent 5px 9px),
+          repeating-linear-gradient(30deg, transparent 0 54px, color-mix(in srgb, var(--blue) 5%, transparent) 55px, transparent 56px 108px),
+          repeating-linear-gradient(150deg, transparent 0 76px, color-mix(in srgb, var(--signal) 5%, transparent) 77px, transparent 78px 152px);
+        mask-image: radial-gradient(ellipse at center, #000 10%, transparent 82%);
+        content: "";
+        pointer-events: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      button:focus-visible {
+        outline: 3px solid var(--blue);
+        outline-offset: 3px;
+      }
+
+      .question-title:focus {
+        outline: 2px solid var(--blue);
+        outline-offset: 6px;
+        border-radius: 4px;
+      }
+
+      .shell {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        padding: 28px 20px 22px;
+      }
+
+      .topbar,
+      .main,
+      .footer {
+        width: min(100%, 640px);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 38px;
+        margin: 0 auto 24px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 0;
+        color: var(--signal);
+        background: linear-gradient(145deg, color-mix(in srgb, var(--text) 10%, var(--panel-raised)), var(--panel-raised) 60%, var(--panel));
+      }
+
+      .brand-mark svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 650;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      .main {
+        margin: auto 0;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0 0 12px;
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 18px;
+        height: 1px;
+        background: currentColor;
+        content: "";
+      }
+
+      .intro {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.65;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background:
+          linear-gradient(145deg, color-mix(in srgb, var(--text) 7%, transparent), transparent 42%),
+          linear-gradient(155deg, var(--panel-raised), var(--panel) 42%, color-mix(in srgb, var(--panel) 90%, black));
+        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 15%, transparent), var(--shadow);
+        clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px));
+      }
+
+      .card-top {
+        position: relative;
+        display: flex;
+        min-height: 126px;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--line);
+        background:
+          repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in srgb, var(--text) 2%, transparent) 4px, transparent 5px 8px),
+          linear-gradient(145deg, color-mix(in srgb, var(--text) 15%, var(--panel-raised)), var(--panel-raised) 52%, color-mix(in srgb, var(--accent) 10%, var(--panel)));
+      }
+
+      .card-top::before {
+        position: absolute;
+        z-index: 1;
+        inset: 9px;
+        border: 1px solid color-mix(in srgb, var(--signal) 22%, transparent);
+        clip-path: polygon(0 0, 26px 0, 26px 1px, calc(100% - 26px) 1px, calc(100% - 26px) 0, 100% 0, 100% 26px, calc(100% - 1px) 26px, calc(100% - 1px) calc(100% - 26px), 100% calc(100% - 26px), 100% 100%, calc(100% - 26px) 100%, calc(100% - 26px) calc(100% - 1px), 26px calc(100% - 1px), 26px 100%, 0 100%, 0 calc(100% - 26px), 1px calc(100% - 26px), 1px 26px, 0 26px);
+        content: "";
+        pointer-events: none;
+      }
+
+      .card-top::after {
+        position: absolute;
+        top: -108px;
+        right: 48px;
+        width: 260px;
+        height: 260px;
+        border: 1px solid color-mix(in srgb, var(--blue) 22%, transparent);
+        border-radius: 0;
+        box-shadow:
+          0 0 0 20px color-mix(in srgb, var(--blue) 4%, transparent),
+          0 0 0 46px color-mix(in srgb, var(--signal) 3%, transparent);
+        transform: rotate(45deg);
+        content: "";
+        pointer-events: none;
+      }
+
+      .top-copy {
+        position: relative;
+        z-index: 1;
+      }
+
+      .top-label {
+        margin: 0 0 9px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 0;
+        font-size: clamp(25px, 6vw, 34px);
+        font-weight: 720;
+        letter-spacing: -.045em;
+        line-height: 1.1;
+      }
+
+      .orbital {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        width: 76px;
+        height: 76px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid color-mix(in srgb, var(--signal) 70%, transparent);
+        border-radius: 0;
+        color: var(--signal);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      }
+
+      .orbital::before,
+      .orbital::after {
+        position: absolute;
+        width: 52px;
+        height: 52px;
+        border: 1px solid color-mix(in srgb, var(--blue) 55%, transparent);
+        border-radius: 0;
+        transform: rotate(45deg);
+        content: "";
+      }
+
+      .orbital::after {
+        top: 8px;
+        right: 11px;
+        width: 8px;
+        height: 8px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--signal);
+      }
+
+      .orbital svg {
+        width: 25px;
+        height: 25px;
+      }
+
+      .card-content {
+        padding: 26px 28px 28px;
+      }
+
+      .progress-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 11px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      .progress-row strong {
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .progress-track {
+        height: 6px;
+        overflow: hidden;
+        margin-bottom: 28px;
+        border-radius: 99px;
+        background:
+          repeating-linear-gradient(90deg, var(--panel-soft) 0 calc(10% - 2px), color-mix(in srgb, var(--page) 72%, transparent) calc(10% - 2px) 10%);
+        clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+      }
+
+      .progress-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(180deg, var(--accent-strong), var(--accent) 58%, color-mix(in srgb, var(--accent) 62%, #213538));
+        box-shadow: inset 0 1px 0 color-mix(in srgb, white 44%, transparent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 420ms cubic-bezier(.2, .8, .2, 1);
+      }
+
+      .question-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .question-meta > svg {
+        width: 20px;
+        height: 20px;
+        flex: 0 0 auto;
+        color: var(--blue);
+      }
+
+      .question-emblem {
+        position: relative;
+        display: grid;
+        width: 46px;
+        height: 46px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid color-mix(in srgb, var(--emblem-ink, var(--signal)) 60%, transparent);
+        color: var(--emblem-ink, var(--signal));
+        background:
+          linear-gradient(145deg, color-mix(in srgb, white 12%, transparent), transparent 55%),
+          color-mix(in srgb, var(--emblem-ink, var(--signal)) 9%, var(--panel-raised));
+        clip-path: polygon(50% 0, 88% 12%, 100% 50%, 88% 88%, 50% 100%, 12% 88%, 0 50%, 12% 12%);
+      }
+
+      .question-emblem::before {
+        position: absolute;
+        inset: 9px;
+        border: 1px solid color-mix(in srgb, currentColor 55%, transparent);
+        content: "";
+        transform: rotate(45deg);
+      }
+
+      .question-emblem svg {
+        position: relative;
+        width: 24px;
+        height: 24px;
+        overflow: visible;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.35;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .type-defense { --emblem-ink: #e3c078; }
+      .type-spartan { --emblem-ink: #75d9ca; }
+      .type-ai { --emblem-ink: #a7dfea; }
+      .type-ring { --emblem-ink: #e3c078; }
+      .type-builders { --emblem-ink: #c5d5a6; }
+      .type-covenant { --emblem-ink: #b9a9eb; }
+      .type-flood { --emblem-ink: #e6a27e; }
+      .type-reach { --emblem-ink: #98bce7; }
+      .type-pillar { --emblem-ink: #8fd8cb; }
+      .type-sangheili { --emblem-ink: #d69db1; }
+
+      .type-defense svg { animation: icon-pulse 3.2s ease-in-out infinite; }
+      .type-spartan svg { animation: icon-scan 2.8s ease-in-out infinite; }
+      .type-ai svg { animation: icon-signal 3.6s steps(1, end) infinite; }
+      .type-ring::before { animation: icon-orbit 8s linear infinite; }
+      .type-builders svg { animation: icon-turn 12s linear infinite; }
+      .type-covenant svg { animation: icon-pulse 4s ease-in-out infinite reverse; }
+      .type-flood svg { animation: icon-drift 3.4s ease-in-out infinite; }
+      .type-reach svg { animation: icon-orbit 9s linear infinite; }
+      .type-pillar svg { animation: icon-scan 3.2s ease-in-out infinite reverse; }
+      .type-sangheili svg { animation: icon-slash 3.2s ease-in-out infinite; }
+
+      .question-title {
+        min-height: 62px;
+        margin: 0 0 19px;
+        font-size: clamp(19px, 4.5vw, 23px);
+        font-weight: 660;
+        letter-spacing: -.025em;
+        line-height: 1.4;
+      }
+
+      .answers {
+        display: grid;
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+
+      .answer {
+        display: flex;
+        width: 100%;
+        min-height: 56px;
+        align-items: center;
+        gap: 13px;
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+        color: var(--text);
+        background:
+          linear-gradient(140deg, color-mix(in srgb, var(--text) 7%, transparent), transparent 65%),
+          color-mix(in srgb, var(--panel-raised) 84%, var(--panel));
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+      }
+
+      .answer:hover:not(:disabled) {
+        border-color: var(--line-strong);
+        background: var(--panel-raised);
+        transform: translateY(-1px);
+      }
+
+      .answer:disabled {
+        cursor: default;
+      }
+
+      .answer-key {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 0;
+        border-radius: 0;
+        background: color-mix(in srgb, var(--line) 75%, transparent);
+        clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .answer-text {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 540;
+        line-height: 1.4;
+      }
+
+      .answer-mark {
+        display: none;
+        width: 20px;
+        height: 20px;
+        flex: 0 0 auto;
+      }
+
+      .answer.is-correct {
+        border-color: color-mix(in srgb, var(--correct) 75%, transparent);
+        color: var(--correct);
+        background: var(--correct-bg);
+        animation: reveal-correct 360ms ease both;
+      }
+
+      .answer.is-correct .answer-key {
+        border-color: color-mix(in srgb, var(--correct) 50%, transparent);
+        color: var(--correct);
+      }
+
+      .answer.is-wrong {
+        border-color: color-mix(in srgb, var(--wrong) 75%, transparent);
+        color: var(--wrong);
+        background: var(--wrong-bg);
+        animation: wrong-shake 380ms ease both;
+      }
+
+      .answer.is-wrong .answer-key {
+        border-color: color-mix(in srgb, var(--wrong) 50%, transparent);
+        color: var(--wrong);
+      }
+
+      .answer.is-correct .answer-mark,
+      .answer.is-wrong .answer-mark {
+        display: block;
+      }
+
+      .feedback {
+        display: flex;
+        min-height: 56px;
+        align-items: center;
+        gap: 11px;
+        padding: 12px 14px;
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        color: var(--muted);
+        background: var(--panel-raised);
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%);
+        font-size: 13px;
+        line-height: 1.5;
+        animation: feedback-in 220ms ease both;
+      }
+
+      .feedback[hidden] {
+        display: none;
+      }
+
+      .feedback.is-correct {
+        border-color: color-mix(in srgb, var(--correct) 45%, var(--line));
+        color: var(--correct);
+        background: color-mix(in srgb, var(--correct-bg) 78%, var(--panel));
+      }
+
+      .feedback.is-wrong {
+        border-color: color-mix(in srgb, var(--wrong) 42%, var(--line));
+        color: var(--wrong);
+        background: color-mix(in srgb, var(--wrong-bg) 78%, var(--panel));
+      }
+
+      .feedback-icon {
+        display: grid;
+        width: 25px;
+        height: 25px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 50%;
+        background: color-mix(in srgb, currentColor 15%, transparent);
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 19px;
+      }
+
+      .score {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .score strong {
+        margin-left: 4px;
+        color: var(--text);
+        font-size: 15px;
+      }
+
+      .primary-button {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 0;
+        color: var(--accent-ink);
+        background: var(--accent);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
+        transition: background 160ms ease, transform 160ms ease;
+        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      }
+
+      .primary-button:hover {
+        background: var(--accent-strong);
+        transform: translateY(-1px);
+      }
+
+      .primary-button:active {
+        transform: translateY(0);
+      }
+
+      .primary-button svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .start-content {
+        padding-top: 27px;
+      }
+
+      .mission-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 22px 0 24px;
+      }
+
+      .mission-stat {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background: color-mix(in srgb, var(--panel-raised) 65%, transparent);
+        clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+      }
+
+      .mission-stat span {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .mission-stat strong {
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .start-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 19px;
+        border-top: 1px solid var(--line);
+      }
+
+      .start-footer p {
+        max-width: 250px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .result-content {
+        padding: 35px 28px 30px;
+        text-align: center;
+      }
+
+      .result-emoji {
+        display: grid;
+        width: 78px;
+        height: 78px;
+        place-items: center;
+        margin: 0 auto 20px;
+        border: 1px solid var(--line-strong);
+        border-radius: 0;
+        background: var(--panel-raised);
+        font-size: 39px;
+        clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        animation: result-pop 520ms cubic-bezier(.16, 1, .3, 1) both;
+      }
+
+      .difficulty-display {
+        display: flex;
+        width: min(100%, 330px);
+        align-items: center;
+        gap: 16px;
+        padding: 13px 17px;
+        margin: 0 auto 20px;
+        border: 1px solid var(--line-strong);
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--tier-color) 12%, transparent), transparent 65%),
+          var(--panel-raised);
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+      }
+
+      .difficulty-emblem {
+        display: grid;
+        width: 56px;
+        height: 56px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid color-mix(in srgb, var(--tier-color) 65%, transparent);
+        color: var(--tier-color);
+        background: color-mix(in srgb, var(--tier-color) 9%, var(--panel));
+        clip-path: polygon(50% 0, 88% 12%, 100% 50%, 88% 88%, 50% 100%, 12% 88%, 0 50%, 12% 12%);
+        animation: result-pop 520ms cubic-bezier(.16, 1, .3, 1) both;
+      }
+
+      .difficulty-emblem svg {
+        width: 39px;
+        height: 39px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: square;
+        stroke-linejoin: bevel;
+        stroke-width: 1.2;
+      }
+
+      .difficulty-copy {
+        display: grid;
+        gap: 4px;
+        text-align: left;
+      }
+
+      .difficulty-copy span {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+      }
+
+      .difficulty-copy strong {
+        color: var(--tier-color);
+        font-size: 18px;
+        font-weight: 750;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .difficulty-recruit { --tier-color: #9eaaa5; }
+      .difficulty-normal { --tier-color: #75d9ca; }
+      .difficulty-heroic { --tier-color: #e3c078; }
+      .difficulty-legendary { --tier-color: #f0a96e; }
+
+      .result-content .eyebrow {
+        justify-content: center;
+      }
+
+      .result-title {
+        margin: 0 0 9px;
+        font-size: clamp(25px, 6vw, 32px);
+        font-weight: 720;
+        letter-spacing: -.04em;
+      }
+
+      .result-copy {
+        margin: 0 auto 25px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .score-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 17px;
+        margin-bottom: 22px;
+        border: 1px solid var(--line);
+        border-radius: 0;
+        background: var(--panel-raised);
+        clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
+      }
+
+      .score-display strong {
+        color: var(--accent);
+        font-size: 34px;
+        font-weight: 750;
+        letter-spacing: -.05em;
+      }
+
+      .score-display span {
+        color: var(--muted);
+        font-size: 12px;
+        text-align: left;
+      }
+
+      .result-content .primary-button {
+        min-width: 185px;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 24px auto 0;
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+      }
+
+      .footer span:last-child {
+        text-align: right;
+      }
+
+      .shake {
+        animation: wrong-shake 380ms ease both;
+      }
+
+      @keyframes wrong-shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-5px); }
+        40% { transform: translateX(4px); }
+        60% { transform: translateX(-3px); }
+        80% { transform: translateX(2px); }
+      }
+
+      @keyframes reveal-correct {
+        0% { transform: scale(.985); }
+        60% { transform: scale(1.012); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes feedback-in {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes result-pop {
+        from { opacity: 0; transform: scale(.7) rotate(-12deg); }
+        to { opacity: 1; transform: scale(1) rotate(0); }
+      }
+
+      @keyframes icon-pulse {
+        0%, 100% { opacity: .72; transform: scale(.9); }
+        50% { opacity: 1; transform: scale(1.08); }
+      }
+
+      @keyframes icon-scan {
+        0%, 100% { transform: translateY(2px); }
+        50% { transform: translateY(-2px); }
+      }
+
+      @keyframes icon-signal {
+        0%, 84%, 89%, 100% { opacity: 1; }
+        86%, 87% { opacity: .35; }
+      }
+
+      @keyframes icon-orbit {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes icon-turn {
+        0%, 20%, 100% { transform: rotate(0); }
+        50%, 70% { transform: rotate(45deg); }
+      }
+
+      @keyframes icon-drift {
+        0%, 100% { transform: translate(0, 0) scale(.94); }
+        50% { transform: translate(1px, -2px) scale(1.06); }
+      }
+
+      @keyframes icon-slash {
+        0%, 100% { transform: translateX(-2px) rotate(-8deg); }
+        50% { transform: translateX(2px) rotate(8deg); }
+      }
+
+      @media (max-width: 520px) {
+        .shell {
+          padding: 18px 14px 16px;
+        }
+
+        .topbar {
+          margin-bottom: 18px;
+        }
+
+        .card-top {
+          min-height: 112px;
+          padding: 19px 20px;
+        }
+
+        .card-content {
+          padding: 22px 19px 21px;
+        }
+
+        .result-content {
+          padding: 29px 20px 24px;
+        }
+
+        .orbital {
+          width: 60px;
+          height: 60px;
+        }
+
+        .orbital::before {
+          width: 44px;
+          height: 44px;
+        }
+
+        .question-title {
+          min-height: 0;
+        }
+
+        .answer {
+          min-height: 53px;
+          padding: 9px 11px;
+        }
+
+        .footer {
+          margin-top: 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: .01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: .01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="m12 2.8 8 4.6v9.2l-8 4.6-8-4.6V7.4l8-4.6Z" stroke="currentColor" stroke-width="1.3" />
+              <path d="m12 6.7 4.5 2.6v5.4L12 17.3l-4.5-2.6V9.3L12 6.7Z" stroke="currentColor" stroke-width="1.2" />
+              <path d="m12 9.2 2.4 1.4v2.8L12 14.8l-2.4-1.4v-2.8L12 9.2Z" fill="currentColor" />
+            </svg>
+          </span>
+          <span>Forerunner Archive</span>
+        </div>
+        <div class="status"><span class="status-dot"></span><span>Archive online</span></div>
+      </header>
+
+      <main class="main">
+        <p class="eyebrow">Forerunner archive // knowledge index</p>
+        <p class="intro">Ten data fragments. Decode the Halo array, its builders, and the factions that seek it.</p>
+
+        <section class="card" aria-label="Halo universe quiz">
+          <div class="card-top">
+            <div class="top-copy">
+              <p class="top-label">Forerunner archive // 04</p>
+              <h1>Archive interface</h1>
+            </div>
+            <div class="orbital" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="m12 2.8 7.3 4.2v10L12 21.2l-7.3-4.2V7L12 2.8Z" stroke="currentColor" stroke-width="1.2" />
+                <path d="m12 7 4 2.3v5.4L12 17l-4-2.3V9.3L12 7Z" stroke="currentColor" stroke-width="1.2" />
+                <path d="m12 10 1.7 1v2l-1.7 1-1.7-1v-2l1.7-1Z" fill="currentColor" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="card-content start-content" id="screen-start">
+            <div class="question-meta">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M10 2.5v15m-7.5-7.5h15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <span>Knowledge assessment</span>
+            </div>
+            <h2 class="question-title">Ready to access the archive?</h2>
+            <p class="intro">Test your knowledge of humanity, the Covenant, and the ancient mysteries at the center of Halo.</p>
+            <div class="mission-grid">
+              <div class="mission-stat"><span>Questions</span><strong>10 transmissions</strong></div>
+              <div class="mission-stat"><span>Scoring</span><strong>1 point each</strong></div>
+            </div>
+            <div class="start-footer">
+              <p>Choose the best answer for each transmission.</p>
+              <button class="primary-button" id="start-button" type="button">
+                Initialize archive
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-content quiz-content" id="screen-quiz" hidden>
+            <div class="progress-row">
+              <span>Transmission <strong id="question-count">01 / 10</strong></span>
+              <span>Progress <strong id="progress-percent">10%</strong></span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="1">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="question-meta">
+              <span class="question-emblem type-defense" id="question-emblem" aria-hidden="true"></span>
+              <span id="question-category">Humanity's defense</span>
+            </div>
+            <h2 class="question-title" id="question-title" tabindex="-1"></h2>
+            <ol class="answers" id="answers" aria-label="Answer choices"></ol>
+            <div class="feedback" id="feedback" role="status" aria-live="polite" hidden>
+              <span class="feedback-icon" id="feedback-icon" aria-hidden="true"></span>
+              <span id="feedback-copy"></span>
+            </div>
+            <div class="card-actions">
+              <div class="score">Score <strong id="score">0</strong></div>
+              <button class="primary-button" id="next-button" type="button" hidden>
+                Continue
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="result-content" id="screen-result" hidden>
+            <div class="result-emoji" id="result-emoji" role="img"></div>
+            <p class="eyebrow">Assessment complete</p>
+            <h2 class="result-title" id="result-title"></h2>
+            <p class="result-copy" id="result-copy"></p>
+            <div class="difficulty-display difficulty-recruit" id="difficulty-display">
+              <span class="difficulty-emblem" id="difficulty-emblem" aria-hidden="true"></span>
+              <span class="difficulty-copy">
+                <span>Campaign difficulty</span>
+                <strong id="difficulty-title">Recruit</strong>
+              </span>
+            </div>
+            <div class="score-display">
+              <strong id="final-score">0/10</strong>
+              <span>correct<br>transmissions</span>
+            </div>
+            <button class="primary-button" id="restart-button" type="button">
+              Run it again
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M16.2 8A6.3 6.3 0 0 0 5 5.5L3.5 7m0 0V3.8M3.5 7h3.2m-2.9 5A6.3 6.3 0 0 0 15 14.5l1.5-1.5m0 0v3.2m0-3.2h-3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Preserve. Interpret. Reclaim.</span>
+        <span>Archive index · Installation 04</span>
+      </footer>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          category: "Humanity's defense",
+          type: "defense",
+          question: "What does UNSC stand for?",
+          answers: ["United Nations Space Command", "United Network of Spartan Colonies", "Universal Naval Security Council", "United Nations Starship Corps"],
+          correct: 0,
+          fact: "The United Nations Space Command is the human military and governing body in Halo."
+        },
+        {
+          category: "Spartan program",
+          type: "spartan",
+          question: "What is the Master Chief's Spartan designation?",
+          answers: ["SPARTAN-092", "SPARTAN-117", "SPARTAN-034", "SPARTAN-058"],
+          correct: 1,
+          fact: "John-117 is the Master Chief Petty Officer of the Navy and a SPARTAN-II."
+        },
+        {
+          category: "Artificial intelligence",
+          type: "ai",
+          question: "Which AI accompanies the Master Chief through much of the original trilogy?",
+          answers: ["Serina", "Isabel", "Cortana", "Roland"],
+          correct: 2,
+          fact: "Cortana is a human smart AI who works closely with John-117."
+        },
+        {
+          category: "The Halo array",
+          type: "ring",
+          question: "What is Installation 04?",
+          answers: ["A Covenant capital ship", "A Forerunner Halo ring", "The UNSC home planet", "A Spartan training station"],
+          correct: 1,
+          fact: "Installation 04 is the first Halo ring that the Master Chief encounters."
+        },
+        {
+          category: "Ancient builders",
+          type: "builders",
+          question: "Which ancient civilization built the Halo installations?",
+          answers: ["The Precursors", "The Banished", "The Forerunners", "The San'Shyuum"],
+          correct: 2,
+          fact: "The Forerunners built the Halo array as a last-resort weapon against the Flood."
+        },
+        {
+          category: "The Covenant",
+          type: "covenant",
+          question: "What is the Covenant?",
+          answers: ["A human colony alliance", "An alliance of alien species", "A Forerunner research group", "A Spartan squadron"],
+          correct: 1,
+          fact: "The Covenant is a powerful alliance of alien species united by a religious belief in the Forerunners."
+        },
+        {
+          category: "The Flood",
+          type: "flood",
+          question: "What is the Flood?",
+          answers: ["A human rebel faction", "A Forerunner ship class", "A parasitic life-form", "A Covenant energy weapon"],
+          correct: 2,
+          fact: "The Flood is a parasitic organism that threatens sentient life across the galaxy."
+        },
+        {
+          category: "Fall of Reach",
+          type: "reach",
+          question: "Which human stronghold is the setting of Halo: Reach?",
+          answers: ["Harvest", "Reach", "Meridian", "Arcadia"],
+          correct: 1,
+          fact: "Reach is a major UNSC military stronghold and the site of a pivotal Covenant invasion."
+        },
+        {
+          category: "First contact",
+          type: "pillar",
+          question: "What is the name of the human ship that brings Master Chief to Installation 04?",
+          answers: ["Forward Unto Dawn", "Infinity", "Pillar of Autumn", "Spirit of Fire"],
+          correct: 2,
+          fact: "The Pillar of Autumn escapes Reach and arrives at Installation 04 in Halo: Combat Evolved."
+        },
+        {
+          category: "Sangheili culture",
+          type: "sangheili",
+          question: "In Halo lore, what is the Arbiter?",
+          answers: ["A Covenant ship", "A special title given to a Sangheili warrior", "A Forerunner AI", "A human special-operations unit"],
+          correct: 1,
+          fact: "The Arbiter is a title given to a Sangheili warrior who serves the Covenant in a role of great importance."
+        }
+      ];
+
+      const questionIcons = {
+        defense: '<path d="M12 2.5 19 5v5.3c0 4.9-3 8.1-7 10.2-4-2.1-7-5.3-7-10.2V5l7-2.5Z"/><path d="m8.5 11.8 2.2 2.2 4.8-5"/>',
+        spartan: '<path d="M5 10a7 7 0 0 1 14 0v3l-3 2H8l-3-2v-3Z"/><path d="M8 9h8l2 3H6l2-3Zm2 6v2m4-2v2"/>',
+        ai: '<rect x="8" y="8" width="8" height="8" rx="1"/><path d="M10 11h4m-4 2h3M4 8h4m8 0h4M4 16h4m8 0h4M8 4v4m8-4v4M8 16v4m8-4v4"/>',
+        ring: '<ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-28 12 12)"/><circle cx="12" cy="12" r="2"/><path d="M5.5 6.5 4 5m14 14-1.5-1.5"/>',
+        builders: '<path d="m12 2.5 8 4.7v9.6l-8 4.7-8-4.7V7.2l8-4.7Z"/><path d="m12 7 4.5 2.6v5L12 17l-4.5-2.4v-5L12 7Z"/>',
+        covenant: '<path d="m12 2 2.3 6.1L21 10l-5.3 3.6.2 6.7-5.4-4-6.2 2.2 2.2-6.2L2.5 7l6.7.2L12 2Z"/>',
+        flood: '<circle cx="12" cy="12" r="2.6"/><path d="M12 3.5c2.5 1.3 3.2 3.2 2.1 5.7m6.1 2.8c-2.3 1.6-4.3 1.4-6-.7m-4.4 9.2c-.2-2.8 1-4.3 3.7-4.7M3.8 8.2c2.8-.1 4.2 1.2 4.4 3.9"/>',
+        reach: '<circle cx="12" cy="12" r="5.2"/><ellipse cx="12" cy="12" rx="10" ry="3.4" transform="rotate(-25 12 12)"/><path d="m16.5 6 1.8-1.5"/>',
+        pillar: '<path d="m3 13 7-2 3-6 2 1-1 5 6 2v2l-7-1-4 4-1-.8 2-4-7 1v-1Z"/><path d="M4 18h6"/>',
+        sangheili: '<path d="m5 19 9-14 2 2-9 14H5v-2Z"/><path d="m13 8 4 4m-7 0 5 5M4 20h4"/>'
+      };
+
+      const difficultyEmblems = {
+        recruit: '<path d="M20 12 16 5H8l-4 7 4 7h8l4-7Z"/><path d="M15 12H9"/>',
+        normal: '<path d="M20 12 16 5H8l-4 7 4 7h8l4-7Z"/><path d="M16 12H8m4-4v8"/>',
+        heroic: '<path d="M20 12 16 5H8l-4 7 4 7h8l4-7Z"/><path d="M16 12H8m4-4v8m-7-4h3m8 0h3"/>',
+        legendary: '<path d="M20 12 16 5H8l-4 7 4 7h8l4-7Z"/><path d="M16 12H8m4-4v8m-7-4h3m8 0h3m-7-8V3m0 18v-2m-5-9-2-2m14 10-2-2"/>'
+      };
+
+      const startScreen = document.querySelector("#screen-start");
+      const quizScreen = document.querySelector("#screen-quiz");
+      const resultScreen = document.querySelector("#screen-result");
+      const startButton = document.querySelector("#start-button");
+      const nextButton = document.querySelector("#next-button");
+      const restartButton = document.querySelector("#restart-button");
+      const questionTitle = document.querySelector("#question-title");
+      const questionCount = document.querySelector("#question-count");
+      const questionCategory = document.querySelector("#question-category");
+      const questionEmblem = document.querySelector("#question-emblem");
+      const answersList = document.querySelector("#answers");
+      const progressFill = document.querySelector("#progress-fill");
+      const progressTrack = document.querySelector(".progress-track");
+      const progressPercent = document.querySelector("#progress-percent");
+      const scoreLabel = document.querySelector("#score");
+      const feedback = document.querySelector("#feedback");
+      const feedbackIcon = document.querySelector("#feedback-icon");
+      const feedbackCopy = document.querySelector("#feedback-copy");
+      const resultEmoji = document.querySelector("#result-emoji");
+      const resultTitle = document.querySelector("#result-title");
+      const resultCopy = document.querySelector("#result-copy");
+      const difficultyDisplay = document.querySelector("#difficulty-display");
+      const difficultyEmblem = document.querySelector("#difficulty-emblem");
+      const difficultyTitle = document.querySelector("#difficulty-title");
+      const finalScore = document.querySelector("#final-score");
+      let currentQuestion = 0;
+      let score = 0;
+      let answered = false;
+
+      function showScreen(screen) {
+        startScreen.hidden = screen !== "start";
+        quizScreen.hidden = screen !== "quiz";
+        resultScreen.hidden = screen !== "result";
+      }
+
+      function renderQuestion() {
+        const item = questions[currentQuestion];
+        const number = currentQuestion + 1;
+        answered = false;
+        questionCount.textContent = `${String(number).padStart(2, "0")} / ${questions.length}`;
+        questionCategory.textContent = item.category;
+        questionEmblem.className = `question-emblem type-${item.type}`;
+        questionEmblem.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${questionIcons[item.type]}</svg>`;
+        questionTitle.textContent = item.question;
+        progressPercent.textContent = `${number * 10}%`;
+        progressFill.style.transform = `scaleX(${number / 10})`;
+        progressTrack.setAttribute("aria-valuenow", String(number));
+        scoreLabel.textContent = String(score);
+        feedback.hidden = true;
+        feedback.className = "feedback";
+        nextButton.hidden = true;
+        nextButton.innerHTML = number === questions.length
+          ? 'View results <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>'
+          : 'Continue <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>';
+        answersList.replaceChildren(...item.answers.map((answer, index) => {
+          const itemNode = document.createElement("li");
+          const button = document.createElement("button");
+          button.className = "answer";
+          button.type = "button";
+          button.dataset.index = String(index);
+          button.setAttribute("aria-label", `${String.fromCharCode(65 + index)}: ${answer}`);
+          const key = document.createElement("span");
+          key.className = "answer-key";
+          key.setAttribute("aria-hidden", "true");
+          key.textContent = String.fromCharCode(65 + index);
+          const text = document.createElement("span");
+          text.className = "answer-text";
+          text.textContent = answer;
+          const mark = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          mark.setAttribute("viewBox", "0 0 20 20");
+          mark.setAttribute("fill", "none");
+          mark.setAttribute("class", "answer-mark");
+          mark.setAttribute("aria-hidden", "true");
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", index === item.correct ? "m4 10 4 4 8-8" : "M5 5l10 10m0-10L5 15");
+          path.setAttribute("stroke", "currentColor");
+          path.setAttribute("stroke-width", "2");
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute("stroke-linejoin", "round");
+          mark.append(path);
+          button.append(key, text, mark);
+          button.addEventListener("click", () => selectAnswer(index, button));
+          itemNode.append(button);
+          return itemNode;
+        }));
+      }
+
+      function selectAnswer(index, selectedButton) {
+        if (answered) return;
+        answered = true;
+        const item = questions[currentQuestion];
+        const correct = index === item.correct;
+        const buttons = [...answersList.querySelectorAll(".answer")];
+        buttons.forEach((button) => {
+          button.disabled = true;
+          const choice = Number(button.dataset.index);
+          if (choice === item.correct) button.classList.add("is-correct");
+        });
+        if (correct) {
+          score += 1;
+          scoreLabel.textContent = String(score);
+          feedbackIcon.textContent = "✓";
+          feedbackCopy.textContent = `Correct. ${item.fact}`;
+          feedback.classList.add("is-correct");
+        } else {
+          selectedButton.classList.add("is-wrong");
+          feedbackIcon.textContent = "!";
+          feedbackCopy.textContent = `Not quite. ${item.fact}`;
+          feedback.classList.add("is-wrong");
+        }
+        feedback.hidden = false;
+        nextButton.hidden = false;
+        nextButton.focus();
+      }
+
+      function showResults() {
+        const percentage = score / questions.length;
+        const difficulty = score >= 9
+          ? "legendary"
+          : score >= 6
+            ? "heroic"
+            : score >= 3
+              ? "normal"
+              : "recruit";
+        let emoji;
+        let title;
+        let copy;
+        if (percentage >= 0.8) {
+          emoji = "🚀";
+          title = "Outstanding, explorer.";
+          copy = "Your knowledge is ready for deep-space assignment.";
+        } else if (percentage >= 0.5) {
+          emoji = "🛰️";
+          title = "Good work, cadet.";
+          copy = "You’re building a strong foundation. Keep exploring.";
+        } else {
+          emoji = "🌱";
+          title = "Every mission starts somewhere.";
+          copy = "Review the transmissions and take another shot.";
+        }
+        resultEmoji.textContent = emoji;
+        resultEmoji.setAttribute("aria-label", `Reaction: ${title}`);
+        resultTitle.textContent = title;
+        resultCopy.textContent = copy;
+        difficultyDisplay.className = `difficulty-display difficulty-${difficulty}`;
+        difficultyEmblem.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${difficultyEmblems[difficulty]}</svg>`;
+        difficultyTitle.textContent = difficulty;
+        finalScore.textContent = `${score}/${questions.length}`;
+        showScreen("result");
+        restartButton.focus();
+      }
+
+      function advance() {
+        if (currentQuestion === questions.length - 1) {
+          showResults();
+          return;
+        }
+        currentQuestion += 1;
+        renderQuestion();
+        questionTitle.focus();
+      }
+
+      function startQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        renderQuestion();
+        showScreen("quiz");
+        questionTitle.focus();
+      }
+
+      startButton.addEventListener("click", startQuiz);
+      restartButton.addEventListener("click", startQuiz);
+      nextButton.addEventListener("click", advance);
+      document.addEventListener("keydown", (event) => {
+        if (quizScreen.hidden || answered || !["1", "2", "3", "4"].includes(event.key)) return;
+        const button = answersList.querySelectorAll(".answer")[Number(event.key) - 1];
+        if (button) button.click();
+      });
+    </script>
+  </body>
+</html>
