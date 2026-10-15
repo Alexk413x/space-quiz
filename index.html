@@ -1214,6 +1214,16 @@
       let currentQuestion = 0;
       let score = 0;
       let answered = false;
+      let attemptQuestions = [];
+
+      function shuffleQuestions() {
+        const shuffled = [...questions];
+        for (let index = shuffled.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+        }
+        return shuffled;
+      }
 
       function showScreen(screen) {
         startScreen.hidden = screen !== "start";
@@ -1222,7 +1232,7 @@
       }
 
       function renderQuestion() {
-        const item = questions[currentQuestion];
+        const item = attemptQuestions[currentQuestion];
         const number = currentQuestion + 1;
         answered = false;
         questionCount.textContent = `${String(number).padStart(2, "0")} / ${questions.length}`;
@@ -1276,7 +1286,7 @@
       function selectAnswer(index, selectedButton) {
         if (answered) return;
         answered = true;
-        const item = questions[currentQuestion];
+        const item = attemptQuestions[currentQuestion];
         const correct = index === item.correct;
         const buttons = [...answersList.querySelectorAll(".answer")];
         buttons.forEach((button) => {
@@ -1349,6 +1359,7 @@
       }
 
       function startQuiz() {
+        attemptQuestions = shuffleQuestions();
         currentQuestion = 0;
         score = 0;
         renderQuestion();
